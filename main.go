@@ -6,6 +6,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/matildez0/simple-go-mod/config"
+	"github.com/matildez0/simple-go-mod/handlers"
 	"github.com/matildez0/simple-go-mod/models"
 )
 
@@ -19,10 +20,17 @@ func main() {
 		log.Fatal(err)
 	}
 	router := mux.NewRouter()
-	router.HandleFunc("/tasks", func(w http.ResponseWriter, r *http.Request) {
+
+	taskHandler := handlers.NewTaskHandler(dbConnection)
+
+	router.HandleFunc("/tasks", taskHandler.ReadTasks).Methods("GET")
+	router.HandleFunc("/tasks", taskHandler.CreateTask).Methods("POST")
+	router.HandleFunc("/tasks/{id}", taskHandler.UpdateTask).Methods("PUT")
+	router.HandleFunc("/tasks/{id}", taskHandler.DeleteTask).Methods("DELETE")
+	/*router.HandleFunc("/tasks", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Hello, World!"))
-	}).Methods("GET")
+	}.Methods("GET")*/
 
 	defer dbConnection.Close()
 
