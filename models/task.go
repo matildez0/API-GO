@@ -16,4 +16,5 @@ const (
 	status BOOLEAN NOT NULL DEFAULT FALSE
 	)
 	`
+	
 )
